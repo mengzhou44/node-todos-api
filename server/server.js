@@ -23,6 +23,16 @@ app.post('/todos', (req, res) => {
     });
 });
 
+app.get('/todos', (req, res) => {
+  ToDo.find()
+    .then(todos => {
+      res.status(200).send(todos);
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    });
+});
+
 app.get('/', (req, res) => {
   res.send('Easy Express Solutions Inc.');
 });
@@ -30,3 +40,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is runnong on port ${port}`);
 });
+
+module.exports = { app };

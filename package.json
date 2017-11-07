@@ -17,10 +17,11 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mongodb": "^2.2.5",
-    "mongoose": "^4.13.0"
+    "mongoose": "^4.13.0",
+    "save-dev": "^2.0.0"
   },
   "devDependencies": {
-    "expect": "^21.2.1",
+    "expect": "^1.20.2",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
     "supertest": "^3.0.0"

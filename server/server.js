@@ -6,6 +6,7 @@ const { ObjectID } = require('mongodb');
 const { mongoose } = require('./db/mongoose');
 const { User } = require('./models/user');
 const { ToDo } = require('./models/todo');
+const { authenticate } = require('./middleware/authenticate');
 
 const app = express();
 app.use(bodyParser.json());
@@ -120,6 +121,10 @@ app.post('/users', (req, res) => {
     .catch(err => {
       res.status(400).send(err);
     });
+});
+
+app.get('/users/me', authenticate, (req, res) => {
+  return res.status(200).send(req.user);
 });
 
 app.listen(process.env.PORT, () => {

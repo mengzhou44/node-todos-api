@@ -1,31 +1,12 @@
 const expect = require('expect');
 const request = require('supertest');
 const { ObjectID } = require('mongodb');
-
 const { ToDo } = require('../models/todo');
-
 const { app } = require('../server');
+const { todos, users, populateTodos, populateUsers } = require('./seed/seed');
 
-const todos = [
-  {
-    _id: new ObjectID(),
-    text: 'some th to do 1'
-  },
-  {
-    _id: new ObjectID(),
-    text: 'antoher thing to do',
-    completed: true,
-    completedAt: 3333
-  }
-];
-
-beforeEach(done => {
-  ToDo.remove({})
-    .then(() => {
-      return ToDo.insertMany(todos);
-    })
-    .then(() => done());
-});
+beforeEach(populateUsers);
+beforeEach(populateTodos);
 
 describe('GET /todos', () => {
   it('should get a todo list', done => {
@@ -207,5 +188,31 @@ describe('PATCH  /todos/:id', () => {
           })
           .catch(e => done(e));
       });
+  });
+});
+
+describe('GET /users/me', () => {
+  it('should return user if authenticated', done => {
+    request(app)
+      .get('/users/me')
+      .set('x-auth', users[0].tokens[0].token)
+      .send(users[0])
+      .expect(200)
+      .expect(res => {
+        expect(res.body._id).toBe(users[0]._id.toHexString());
+        expect(res.body.email).toBe(users[0].email);
+      })
+      .end(done);
+  });
+
+  it('should return 401 if not authenticated', done => {
+    request(app)
+      .get('/users/me')
+      .send(users[1])
+      .expect(401)
+      .expect(res => {
+        expect(res.body).toEqual({});
+      })
+      .end(done);
   });
 });

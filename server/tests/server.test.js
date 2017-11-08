@@ -125,7 +125,7 @@ describe('DELETE /todos/:id', () => {
         }
         ToDo.findById(id)
           .then(todo => {
-            expect(todo).toNotExist();
+            expect(todo).toBeFalsy();
             done();
           })
           .catch(err => done(err));
@@ -176,7 +176,7 @@ describe('PATCH  /todos/:id', () => {
           .then(todo => {
             expect(todo.text).toBe(newText);
             expect(todo.completed).toBeTruthy();
-            expect(todo.completedAt).toBeA('number');
+            expect(typeof todo.completedAt).toBe('number');
             done();
           })
           .catch(e => done(e));
@@ -203,7 +203,7 @@ describe('PATCH  /todos/:id', () => {
         ToDo.findById(id)
           .then(todo => {
             expect(todo.completed).toBeFalsy();
-            expect(todo.completedAt).toNotExist();
+            expect(todo.completedAt).toBeFalsy();
             done();
           })
           .catch(e => done(e));
@@ -246,7 +246,7 @@ describe('POST /users/login', () => {
       })
       .expect(200)
       .expect(res => {
-        expect(res.headers['x-auth']).toExist();
+        expect(res.headers['x-auth']).toBeTruthy();
       })
       .end((err, res) => {
         if (err) {
@@ -255,7 +255,7 @@ describe('POST /users/login', () => {
 
         User.findById(users[1]._id)
           .then(user => {
-            expect(user.tokens[1]).toInclude({
+            expect(user.toObject().tokens[1]).toMatchObject({
               access: 'auth',
               token: res.headers['x-auth']
             });

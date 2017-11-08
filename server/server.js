@@ -139,6 +139,17 @@ app.get('/users/me', authenticate, (req, res) => {
   return res.status(200).send(req.user);
 });
 
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user
+    .removeToken(req.token)
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch(() => {
+      res.status(400).send();
+    });
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is runnong on port ${process.env.PORT}`);
 });

@@ -1,15 +1,14 @@
 const env = process.env.NODE_ENV || 'development';
 
 if (env !== 'production') {
-  process.env.PORT = 3000;
+  const config = require('./config.json');
+  const envConfig = config[env];
 
-  if (env === 'development') {
-    process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
-  } else if (env === 'test') {
-    process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
-  }
+  var keys = Object.keys(envConfig);
+
+  keys.forEach(key => {
+    process.env[key] = envConfig[key];
+  });
 }
 
 console.log(`ENV ********** ${env}`);
-
-console.log(process.env.MONGODB_URI);

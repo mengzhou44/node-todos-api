@@ -260,3 +260,26 @@ describe('POST /users/login', () => {
       .end(done);
   });
 });
+
+describe('DELETE  /users/me/token', () => {
+  it('should remove token', done => {
+    request(app)
+      .delete('/users/me/token')
+      .set('x-auth', users[0].tokens[0].token)
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toEqual({});
+      })
+      .end((err, res) => {
+        User.findById(users[0]._id)
+          .then(user => {
+            if (!user) {
+              return done('user is not found!');
+            }
+            expect(user.tokens.length).toBe(0);
+            done();
+          })
+          .catch(e => done(e));
+      });
+  });
+});
